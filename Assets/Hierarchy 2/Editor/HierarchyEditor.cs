@@ -842,7 +842,7 @@ namespace Hierarchy2
             if (!rowItem.gameObject.CompareTag(settings.headerDefaultTag))
                 rowItem.gameObject.tag = settings.headerDefaultTag;
 
-            var rect = EditorGUIUtility.PixelsToPoints(RectFromLeft(rowItem.rect, Screen.width, 0));
+            var rect = EditorGUIUtility.PixelsToPoints(RectFromLeft(rowItem.rect, UnityEngine.Screen.width, 0));
             rect.y = rowItem.rect.y;
             rect.height = rowItem.rect.height;
             rect.x += GLOBAL_SPACE_OFFSET_LEFT;
