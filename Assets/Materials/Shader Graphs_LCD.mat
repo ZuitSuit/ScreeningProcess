@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_voronoiNormal
-  m_Shader: {fileID: -6465566751694194690, guid: 177040ed8b183224b854728c9000cf56, type: 3}
+  m_Name: Shader Graphs_LCD
+  m_Shader: {fileID: -6465566751694194690, guid: 095c00ee1bc5f8e449dfa64fe83fcd26, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -19,6 +19,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _SampleTexture2D_5d167b9496f042eabe783957ac0fd0e4_Texture_1:
+        m_Texture: {fileID: 2800000, guid: af7d0a0fc4976014c8e9becc16dbdf8f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _UITexture:
+        m_Texture: {fileID: 2800000, guid: 7801804018a7dcf42abb827444e18660, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -31,6 +39,11 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats: []
-    m_Colors: []
+    m_Floats:
+    - _Brightness: 5
+    - _Contrast: 1
+    - _OldTimey: 0
+    m_Colors:
+    - _MatrixResolution: {r: 128, g: 128, b: 0, a: 0}
+    - _OldTimeyColor: {r: 1, g: 0.84095764, b: 0.5411765, a: 0}
   m_BuildTextureStacks: []
