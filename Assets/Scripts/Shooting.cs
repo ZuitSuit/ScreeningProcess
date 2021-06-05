@@ -5,6 +5,7 @@ using UnityEngine;
 public class Shooting : MonoBehaviour {
 
     Camera mainCam;
+    public GameObject bulletPrefab;
 
     void Start() {
         mainCam = Camera.main;
@@ -20,24 +21,11 @@ public class Shooting : MonoBehaviour {
     void Shoot() {
         Ray ray = mainCam.ViewportPointToRay(Vector3.one/2f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit)) {
-            Renderer rend = hit.transform.GetComponent<Renderer>();
-            MeshCollider meshCollider = hit.collider as MeshCollider;
-                
+        Debug.DrawRay(ray.origin, ray.direction, Color.red);
 
-/*            if (rend == null || rend.sharedMaterial == null || rend.sharedMaterial.mainTexture == null || meshCollider == null) {
-                print(rend);
-                print(rend.sharedMaterial);
-                print(rend.sharedMaterial.mainTexture);
-                print(meshCollider);
+        GameObject newBullet = Lean.Pool.LeanPool.Spawn(bulletPrefab, ray.origin, Quaternion.identity);
 
-                return;
-            }*/
-
-            Vector2 pixelUV = hit.textureCoord;
-
-            print(pixelUV);
-        }
+        newBullet.GetComponent<Bullet>().Shoot(ray.origin, ray.direction);
     }
 
 

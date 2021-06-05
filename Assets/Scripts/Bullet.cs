@@ -2,19 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
-{
-    public Vector3 originPoint { get; set; }
+public class Bullet : MonoBehaviour {
 
-    public void Shoot(Vector3 position, Vector3 direction)
-    {
+    Rigidbody rb;
+
+    public float speed = 10f;
+    public float lifetime = 10f;
+
+    void Start() {
+        rb = GetComponent<Rigidbody>();
+
+        Destroy(gameObject, lifetime);
+    }
+
+    public void Shoot(Vector3 position, Vector3 direction){
+        rb = GetComponent<Rigidbody>();
         //pool 'em - get the bullets from the pool
         transform.position = position;
-        transform.LookAt(direction);
+        transform.up = direction;
 
-        //fling it
-        originPoint = transform.position;
-        
-        
+        rb.angularVelocity = Vector3.zero;
+        rb.velocity = direction * speed;
     }
 }
