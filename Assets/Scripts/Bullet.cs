@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour {
     void Start() {
         rb = GetComponent<Rigidbody>();
 
-        Destroy(gameObject, lifetime);
+        Lean.Pool.LeanPool.Despawn(gameObject, lifetime);
     }
 
     public void Shoot(Vector3 position, Vector3 direction){

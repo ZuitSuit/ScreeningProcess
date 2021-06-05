@@ -6,19 +6,24 @@ public class CameraScreen : MonoBehaviour
 {
     public Camera connectedCam;
 
-    public Vector2Int resolution;
-    public RenderTexture renderTexturePrefab;
-    public RenderTexture renderTexture { get; set; }
-
-    public Renderer screenRenderer;
-
     public MeshRenderer rend;
 
     Vector3[] corners = new Vector3[4];
 
+    public int textureWidth;
+    public float textureRatio = 2f/3.3f;
+
     private void Start() {
-        renderTexture = Instantiate(renderTexturePrefab);
-        //connectedCam.targetTexture = renderTexture;
+        RenderTexture renderTexture = new RenderTexture((int)(textureWidth),
+                                        (int) (textureWidth * textureRatio),
+                                        24);
+        renderTexture.Create();
+
+        print(renderTexture.width + " " + renderTexture.height);
+        
+        connectedCam.targetTexture = renderTexture;
+        //rend.material.SetTexture("_MainTex",renderTexture);
+        rend.material.mainTexture = renderTexture;
 
         /*screenRenderer.material = Instantiate(screenRenderer.material);
         screenRenderer.material.SetVector("_MatrixResolution", (Vector2)resolution);

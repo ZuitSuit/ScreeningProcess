@@ -19,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_5d167b9496f042eabe783957ac0fd0e4_Texture_1:
         m_Texture: {fileID: 2800000, guid: af7d0a0fc4976014c8e9becc16dbdf8f, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -41,9 +45,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Brightness: 5
-    - _Contrast: 1
+    - _Contrast: 0.5
     - _OldTimey: 0
     m_Colors:
-    - _MatrixResolution: {r: 128, g: 128, b: 0, a: 0}
+    - _MatrixResolution: {r: 512, g: 512, b: 0, a: 0}
     - _OldTimeyColor: {r: 1, g: 0.84095764, b: 0.5411765, a: 0}
   m_BuildTextureStacks: []
