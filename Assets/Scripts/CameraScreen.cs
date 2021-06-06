@@ -33,7 +33,15 @@ public class CameraScreen : MonoBehaviour
     }
 
     void CalculateCorners() {
-        corners[0] = rend.bounds.min;
+
+        List<Vector3> vertices = new List<Vector3> (gameObject.GetComponent<MeshFilter>().sharedMesh.vertices);
+                
+                        corners[0] = transform.TransformPoint(vertices[0]);
+                        corners[1] = transform.TransformPoint(vertices[10]);
+                        corners[2] = transform.TransformPoint(vertices[110]);
+                        corners[3] = transform.TransformPoint(vertices[120]);
+
+/*        corners[0] = rend.bounds.min;
 
         corners[1] = rend.bounds.min;
         corners[1].y = rend.bounds.max.y;
@@ -41,12 +49,11 @@ public class CameraScreen : MonoBehaviour
         corners[2] = rend.bounds.max;
 
         corners[3] = rend.bounds.max;
-        corners[3].y = rend.bounds.min.y;
+        corners[3].y = rend.bounds.min.y;*/
     }
 
     void OnDrawGizmos() {
         CalculateCorners();
-
         float index = 0;
         foreach (Vector3 corner in corners) {
             Gizmos.color = Color.Lerp(Color.red, Color.green, index/4);
