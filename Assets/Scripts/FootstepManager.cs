@@ -3,34 +3,31 @@ using UnityEngine;
 public class FootstepManager : MonoBehaviour {
     public AudioSource audioSource;
 
-    public AudioClip[] carpetSounds;
-    public AudioClip[] cementSounds;
-    public AudioClip[] creakyWoodSounds;
-    public AudioClip[] forestSounds;
-    public AudioClip[] glassSounds;
-    public AudioClip[] metalSounds;
-    public AudioClip[] mudSounds;
-    public AudioClip[] puddleSounds;
-    public AudioClip[] sandGravelSounds;
+    public AudioClip[] dirtyGround;
+    public AudioClip[] grass;
+    public AudioClip[] gravel;
+    public AudioClip[] metal;
+    public AudioClip[] rock;
+    public AudioClip[] tile;
+    public AudioClip[] wood;
+
 
     AudioClip[] clipsToUse;
 
     public LayerMask layerMask;
 
     public enum Location {
-        Carpet,
-        Cement,
-        Wood,
-        Forest,
-        Glass,
+        DirtyGround,
+        Grass,
+        Gravel,
         Metal,
-        Mud,
-        Puddle,
-        SandGravel
+        Rock,
+        Tile,
+        Wood
     }
 
     private void Start() {
-        ChangeLocation(Location.Cement);
+        ChangeLocation(Location.Rock);
     }
     private void Update(){
         RaycastHit hit;
@@ -55,35 +52,29 @@ public class FootstepManager : MonoBehaviour {
 
     public void ChangeLocation(Location location) {
         switch (location) {
-            case Location.Carpet:
-                clipsToUse = carpetSounds;
+            case Location.DirtyGround:
+                clipsToUse = dirtyGround;
                 break;
-            case Location.Cement:
-                clipsToUse = cementSounds;
+            case Location.Grass:
+                clipsToUse = grass;
                 break;
-            case Location.Wood:
-                clipsToUse = creakyWoodSounds;
-                break;
-            case Location.Forest:
-                clipsToUse = forestSounds;
-                break;
-            case Location.Glass:
-                clipsToUse = glassSounds;
+            case Location.Gravel:
+                clipsToUse = gravel;
                 break;
             case Location.Metal:
-                clipsToUse = metalSounds;
+                clipsToUse = metal;
                 break;
-            case Location.Mud:
-                clipsToUse = mudSounds;
+            case Location.Rock:
+                clipsToUse = rock;
                 break;
-            case Location.Puddle:
-                clipsToUse = puddleSounds;
+            case Location.Tile:
+                clipsToUse = tile;
                 break;
-            case Location.SandGravel:
-                clipsToUse = sandGravelSounds;
+            case Location.Wood:
+                clipsToUse = wood;
                 break;
             default:
-                throw new System.Exception("Invalid location.");
+                break;
         }
     }
 

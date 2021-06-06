@@ -18,8 +18,6 @@ public class CameraScreen : MonoBehaviour
                                         (int) (textureWidth * textureRatio),
                                         24);
         renderTexture.Create();
-
-        print(renderTexture.width + " " + renderTexture.height);
         
         connectedCam.targetTexture = renderTexture;
         //rend.material.SetTexture("_MainTex",renderTexture);
