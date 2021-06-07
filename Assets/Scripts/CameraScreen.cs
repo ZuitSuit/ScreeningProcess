@@ -20,12 +20,7 @@ public class CameraScreen : MonoBehaviour
         renderTexture.Create();
         
         connectedCam.targetTexture = renderTexture;
-        //rend.material.SetTexture("_MainTex",renderTexture);
         rend.material.mainTexture = renderTexture;
-
-        /*screenRenderer.material = Instantiate(screenRenderer.material);
-        screenRenderer.material.SetVector("_MatrixResolution", (Vector2)resolution);
-        screenRenderer.material.SetTexture("_UITexture", renderTexture);*/
 
         CalculateCorners();
     }
@@ -35,9 +30,9 @@ public class CameraScreen : MonoBehaviour
         List<Vector3> vertices = new List<Vector3> (gameObject.GetComponent<MeshFilter>().sharedMesh.vertices);
                 
                         corners[0] = transform.TransformPoint(vertices[0]);
-                        corners[1] = transform.TransformPoint(vertices[10]);
-                        corners[2] = transform.TransformPoint(vertices[110]);
-                        corners[3] = transform.TransformPoint(vertices[120]);
+                        corners[1] = transform.TransformPoint(vertices[110]);
+                        corners[2] = transform.TransformPoint(vertices[120]);
+                        corners[3] = transform.TransformPoint(vertices[10]);
 
 /*        corners[0] = rend.bounds.min;
 
@@ -65,9 +60,6 @@ public class CameraScreen : MonoBehaviour
         if (bullet == null) return;
 
         Vector3 collisionPoint = collision.contacts[0].point;
-
-        Vector3 center = rend.bounds.max;
-        Vector3 size = rend.bounds.min;
 
         float x = InverseLerp(corners[1], corners[2], collisionPoint);
         float y = InverseLerp(corners[0], corners[1], collisionPoint);

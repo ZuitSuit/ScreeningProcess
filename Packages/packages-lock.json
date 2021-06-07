@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.fluid.behavior-tree": {
+      "version": "2.2.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.org"
+    },
     "com.guciodevs.simple-min-max-slider": {
       "version": "https://github.com/GucioDevs/SimpleMinMaxSlider.git#upm",
       "depth": 0,

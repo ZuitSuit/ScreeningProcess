@@ -29,7 +29,13 @@ public class FootstepManager : MonoBehaviour {
     private void Start() {
         ChangeLocation(Location.Rock);
     }
-    private void Update(){
+
+    void PlayFootstepSound(AnimationEvent evt) {
+        if (evt.animatorClipInfo.weight < 0.5f) return;
+        PlayFootstepSound();
+    }
+
+    public void PlayFootstepSound() {
         RaycastHit hit;
         if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out hit, 2f, layerMask)) {
             GroundIdentifier groundIdentifier = hit.collider.GetComponent<GroundIdentifier>();
@@ -37,15 +43,7 @@ public class FootstepManager : MonoBehaviour {
                 ChangeLocation(groundIdentifier.location);
             }
         }
-    }
 
-    void PlayFootstepSound(AnimationEvent evt) {
-        if (evt.animatorClipInfo.weight < 0.5f) return;
-        AudioClip clip = clipsToUse[Random.Range(0, clipsToUse.Length)];
-        audioSource.PlayOneShot(clip);
-    }
-
-    public void PlayFootstepSound() {
         AudioClip clip = clipsToUse[Random.Range(0, clipsToUse.Length)];
         audioSource.PlayOneShot(clip);
     }
@@ -74,6 +72,7 @@ public class FootstepManager : MonoBehaviour {
                 clipsToUse = wood;
                 break;
             default:
+                throw new System.Exception("Invalid location.");
                 break;
         }
     }
