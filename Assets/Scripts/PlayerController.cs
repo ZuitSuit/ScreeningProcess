@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour {
 
     Collider collider;
 
+    public static bool isDead;
+
     private void Start() {
         rb = GetComponent<Rigidbody>();
 
@@ -118,6 +120,21 @@ public class PlayerController : MonoBehaviour {
             footstepManager.PlayFootstepSound();
             //footstepAudioSource.PlayOneShot(footstepSounds[Random.Range(0, footstepSounds.Length)]);
         }
+    }
+
+    public void Die() {
+        if (isDead) return;
+
+        isDead = true;
+
+        LockCursor(false);
+
+        canMove = false;
+
+        rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.None;
+
+        rb.AddForce(Random.onUnitSphere * 1000f);
     }
 
     bool IsRunning() {

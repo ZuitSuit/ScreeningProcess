@@ -5,20 +5,20 @@ using UnityEngine.AI;
 using CleverCrow.Fluid.BTs.Tasks;
 using CleverCrow.Fluid.BTs.Trees;
 using GD.MinMaxSlider;
+using UnityEngine.Animations.Rigging;
+using Lean.Pool;
 
 public class EnemyAI : MonoBehaviour {
 
     Animator anim;
     NavMeshAgent agent;
 
-    public Vector3 targetPos;
-
     public float speed;
 
     [SerializeField]
     private BehaviorTree tree;
 
-    Transform head;
+    public Transform head;
 
     Transform player;
 
@@ -26,6 +26,8 @@ public class EnemyAI : MonoBehaviour {
     public float sightRange = 10f;
     [Range(0, 360)]
     public float fovRange = 60f;
+    [Range(0f,1f)]
+    public float inaccuracy;
 
     [Header("AI Patrol Settings")]
     public PatrolLoopType patrolLoopType;
@@ -36,6 +38,11 @@ public class EnemyAI : MonoBehaviour {
     float idleTime;
 
     int patrolPathIndex;
+    bool incrementPathIndex;
+
+    public Transform gunBarrel;
+    public RigBuilder rigBuilder;
+    public Transform aimPoint;
 
     public enum PatrolLoopType {
         WalkBack,
@@ -46,20 +53,42 @@ public class EnemyAI : MonoBehaviour {
 
     bool isDead = false;
 
+    [Header("Shooting")]
+    public AudioSource shootSound;
+    public AudioClip[] groundImpactSounds;
+    public AudioClip[] fleshImpactSounds;
+
+    public GameObject impactPrefab;
+
+    public enum CurrentState {
+        Patrol,
+        Suspicious,
+        Alert,
+        Vanish
+    }
+
+    public CurrentState currentState;
+
+    int suspicionLevel = 0;
+    float suspicionTimer = 5f;
+    float alertTimer = 0f;
+    float vanishCounter = 0f;
+
+    float reloadTime;
+
     private void Start() {
         anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
 
-        head = anim.GetBoneTransform(HumanBodyBones.Head);
-
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        tree = new BehaviorTreeBuilder(gameObject)
+        aimPoint.name = "Aim Point " + Random.Range(0, 1000);
+        aimPoint.transform.SetParent(null);
+
+        /*tree = new BehaviorTreeBuilder(gameObject)
             .Selector()
                 .Sequence()
-                    .Condition("Sees player", () => SeesObject(player))
-                    .Condition("Player in range", () => InRange(player.position, transform.position, sightRange))
-                    .Condition("Player in FOV", () => InFov(player.position, fovRange))
+                    .Condition("Sees player", () => FullySeesPlayer())
                         .Do("Shoot player", () => {
 
 
@@ -91,15 +120,26 @@ public class EnemyAI : MonoBehaviour {
                     })
 
                     .End()
-                    .Build();
+                    .Build();*/
     }
 
     void IncrementPatrolPointIndex() {
-        patrolPathIndex++;
+        if (incrementPathIndex) {
+            patrolPathIndex++;
+        } else {
+            patrolPathIndex--;
+            if (patrolPathIndex < 0) {
+                patrolPathIndex = 0;
+                incrementPathIndex = true;
+            }
+        }
 
         if (patrolPathIndex >= patrolPathParent.childCount) {
             if (patrolLoopType == PatrolLoopType.GoToFirst) {
                 patrolPathIndex %= patrolPathParent.childCount;
+            } else if (patrolLoopType == PatrolLoopType.WalkBack) {
+                patrolPathIndex = patrolPathParent.childCount - 1;
+                incrementPathIndex = false;
             }
         }
     }
@@ -123,22 +163,128 @@ public class EnemyAI : MonoBehaviour {
         if (patrolLoopType == PatrolLoopType.GoToFirst) {
             Gizmos.DrawLine(patrolPathParent.GetChild(0).position, patrolPathParent.GetChild(patrolPathParent.childCount - 1).position);
         }
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawRay(gunBarrel.position, gunBarrel.forward);
+
+        Gizmos.DrawRay(head.position, head.forward);
     }
 
     private void Update() {
         if (!isDead) {
-            tree.Tick();
+            //tree.Tick();
 
             agent.nextPosition = transform.position;
+
+            reloadTime -= Time.deltaTime;
+
+            if (FullySeesPlayer() && !PlayerController.isDead) {
+                aimPoint.position = Vector3.Lerp(aimPoint.position, player.position, 10f * Time.deltaTime);
+                rigBuilder.enabled = true;
+                ShootPlayer();
+            }
+
+            switch (currentState) {
+                case CurrentState.Patrol:
+                    rigBuilder.enabled = false;
+
+                    if (idleTime > 0f) {
+                        idleTime -= Time.deltaTime;
+                        SetWalkingSpeed(0f);
+                    }
+
+                    Transform nextPatrolPoint = GetNextPatrolPoint();
+
+                    if (Vector3.Distance(transform.position, nextPatrolPoint.position) > 1f) {
+                        agent.SetDestination(nextPatrolPoint.position);
+                        SetWalkingSpeed(1f);
+                    } else {
+                        IncrementPatrolPointIndex();
+                        idleTime = Random.Range(minMaxIdleTime.x, minMaxIdleTime.y);
+                    }
+
+                    if (FullySeesPlayer()) {
+                        currentState = CurrentState.Suspicious;
+
+                        if (TouchingPlayer()) {
+                            suspicionLevel = 3;
+                            currentState = CurrentState.Alert;
+                        }
+                    }
+
+                    break;
+                case CurrentState.Suspicious:
+                    if (suspicionLevel == 3) {
+                        alertTimer = 10f;
+                        currentState = CurrentState.Alert;
+                    } else {
+                        suspicionTimer = 5f;
+
+                        if (TouchingPlayer()) {
+                            suspicionLevel = 3;
+                            alertTimer = 10f;
+                            currentState = CurrentState.Alert;
+                        } else {
+                            if (FullySeesPlayer()) {
+                                suspicionTimer += 1f * Time.deltaTime;
+                                if (suspicionTimer > 10f) {
+                                    suspicionLevel = 3;
+                                    alertTimer = 10f;
+                                    currentState = CurrentState.Alert;
+                                }
+                            } else {
+                                if (suspicionTimer < 0f) {
+                                    suspicionLevel += 1;
+                                    currentState = CurrentState.Patrol;
+                                } else {
+                                    suspicionTimer -= Time.deltaTime;
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                case CurrentState.Alert:
+                    agent.SetDestination(player.position);
+                    SetWalkingSpeed(1f);
+
+                    if (FullySeesPlayer() || TouchingPlayer()) {
+                        alertTimer = 10f;
+                    } else {
+                        if (alertTimer < 0f) {
+                            vanishCounter = 5f;
+                            currentState = CurrentState.Vanish;
+                        } else {
+                            alertTimer -= Time.deltaTime;
+                        }
+                    }
+
+                    break;
+                case CurrentState.Vanish:
+                    if (TouchingPlayer() || FullySeesPlayer()) {
+                        alertTimer = 10f;
+                        currentState = CurrentState.Alert;
+                    } else {
+                        if (vanishCounter < 0f) {
+                            currentState = CurrentState.Patrol;
+                        } else {
+                            vanishCounter -= Time.deltaTime;
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
+            }
         }
+    }
+
+    bool TouchingPlayer() {
+        return FullySeesPlayer() && InRange(transform.position, player.position, 5f);
     }
 
     public void SetWalkingSpeed(float speed) {
         anim.SetFloat("Speed", speed, 2f, 5f * Time.deltaTime);
-    }
-
-    public void WalkTo(Vector3 pos) {
-        targetPos = pos;
     }
 
     private void OnAnimatorMove() {
@@ -148,6 +294,29 @@ public class EnemyAI : MonoBehaviour {
             agent.speed = targetVelocity.magnitude;
         } else {
             agent.speed = 0f;
+        }
+    }
+
+    void ShootPlayer() {
+        if (PlayerController.isDead) return;
+        if (reloadTime > 0f) return;
+
+        reloadTime = 1f;
+
+        shootSound.Play();
+
+        if (Physics.Raycast(gunBarrel.position, gunBarrel.forward + Random.insideUnitSphere * inaccuracy, out RaycastHit hit)) {
+            if (hit.collider.CompareTag("Player")) {
+                PlayerController.instance.Die();
+                AudioClip clip = fleshImpactSounds[Random.Range(0,fleshImpactSounds.Length)];
+                AudioSource.PlayClipAtPoint(clip, hit.point);
+            } else {
+                AudioClip clip = groundImpactSounds[Random.Range(0,groundImpactSounds.Length)];
+                AudioSource.PlayClipAtPoint(clip, hit.point);
+
+                GameObject newImpact = LeanPool.Spawn(impactPrefab, hit.point, impactPrefab.transform.rotation);
+                LeanPool.Despawn(newImpact, 10f);
+            }
         }
     }
 
@@ -172,5 +341,9 @@ public class EnemyAI : MonoBehaviour {
             GetComponent<RagdollToggle>().SetKinematic(false);
             isDead = true;
         }
+    }
+
+    bool FullySeesPlayer() {
+        return SeesObject(player) && InRange(player.position, transform.position, sightRange) && InFov(player.position, fovRange);
     }
 }
