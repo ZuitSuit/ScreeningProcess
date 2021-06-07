@@ -9,6 +9,7 @@
     }
   ],
   "dependencies": {
+    "com.fluid.behavior-tree": "2.2.0",
     "com.guciodevs.simple-min-max-slider": "https://github.com/GucioDevs/SimpleMinMaxSlider.git#upm",
     "com.unity.animation.rigging": "1.0.3",
     "com.unity.cinemachine": "2.6.5",
@@ -17,6 +18,7 @@
     "com.unity.ide.visualstudio": "2.0.5",
     "com.unity.ide.vscode": "1.2.3",
     "com.unity.probuilder": "4.4.0",
+    "com.unity.progrids": "3.0.3-preview.6",
     "com.unity.render-pipelines.universal": "10.2.2",
     "com.unity.test-framework": "1.1.20",
     "com.unity.textmeshpro": "3.0.1",
@@ -52,7 +54,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.fluid.behavior-tree": "2.2.0"
+    "com.unity.modules.xr": "1.0.0"
   }
 }
