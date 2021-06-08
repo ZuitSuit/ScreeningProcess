@@ -13,14 +13,16 @@ public class CameraScreen : MonoBehaviour
     public int textureWidth;
     public float textureRatio = 2f/3.3f;
 
+    RenderTexture renderTexture;
+
     private void Start() {
-        RenderTexture renderTexture = new RenderTexture((int)(textureWidth),
+        renderTexture = new RenderTexture((int)(textureWidth),
                                         (int) (textureWidth * textureRatio),
                                         24);
         renderTexture.Create();
         
         connectedCam.targetTexture = renderTexture;
-        rend.material.mainTexture = renderTexture;
+        //rend.material.mainTexture = renderTexture;
 
         CalculateCorners();
     }
@@ -43,6 +45,10 @@ public class CameraScreen : MonoBehaviour
 
         corners[3] = rend.bounds.max;
         corners[3].y = rend.bounds.min.y;*/
+    }
+
+    public RenderTexture GetRenderTexture() {
+        return renderTexture;
     }
 
     void OnDrawGizmos() {
