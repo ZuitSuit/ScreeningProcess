@@ -3235,7 +3235,7 @@ MonoBehaviour:
   strategy: 0
   preload: 100
   capacity: 100
-  recycle: 0
+  recycle: 1
   persist: 0
   stamp: 0
   warnings: 1
