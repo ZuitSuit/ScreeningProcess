@@ -2154,7 +2154,8 @@ MonoBehaviour:
   head: {fileID: 7876863670944173593}
   sightRange: 20
   fovRange: 75
-  inaccuracy: 0.2
+  inaccuracy: 0.07
+  reactionTime: 0.7
   patrolLoopType: 1
   minMaxIdleTime: {x: 5, y: 10}
   gunBarrel: {fileID: 1309966698144053114}
@@ -6485,8 +6486,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4069695717600130193}
-  - component: {fileID: 3087393083191508648}
-  - component: {fileID: 3315941608765202814}
   m_Layer: 0
   m_Name: AimPoint
   m_TagString: Untagged
@@ -6508,55 +6507,6 @@ Transform:
   m_Father: {fileID: 4268479173603597466}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3087393083191508648
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7918455495106003942}
-  m_Mesh: {fileID: 4300002, guid: f36c148914c8e05498dad1ca7becaa2e, type: 3}
---- !u!23 &3315941608765202814
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7918455495106003942}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: fcbed2e990c92624cac901c6e3f89bcf, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7985652930622705232
 GameObject:
   m_ObjectHideFlags: 0

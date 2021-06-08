@@ -29,6 +29,8 @@ public class EnemyAI : MonoBehaviour {
     [Range(0f,1f)]
     public float inaccuracy;
 
+    public float reactionTime = 0.7f;
+
     [Header("AI Patrol Settings")]
     public PatrolLoopType patrolLoopType;
 
@@ -75,6 +77,8 @@ public class EnemyAI : MonoBehaviour {
     float vanishCounter = 0f;
 
     float reloadTime;
+
+    float seeingPlayerTimer = 0f;
 
     private void Start() {
         anim = GetComponent<Animator>();
@@ -179,9 +183,18 @@ public class EnemyAI : MonoBehaviour {
             reloadTime -= Time.deltaTime;
 
             if (FullySeesPlayer() && !PlayerController.isDead) {
-                aimPoint.position = Vector3.Lerp(aimPoint.position, player.position, 10f * Time.deltaTime);
+                aimPoint.position = Vector3.Lerp(aimPoint.position, player.position, 5f * Time.deltaTime);
                 rigBuilder.enabled = true;
-                ShootPlayer();
+                agent.SetDestination(player.position);
+
+                if (Vector3.Dot(head.forward, ( player.position - head.position ).normalized) > 0.95f) {
+                    seeingPlayerTimer += Time.deltaTime;
+                    if (seeingPlayerTimer > reactionTime) {
+                        ShootPlayer();
+                    }
+                } else {
+                    seeingPlayerTimer = 0f;
+                }
             }
 
             switch (currentState) {
