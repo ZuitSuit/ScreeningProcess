@@ -182,9 +182,17 @@ public class EnemyAI : MonoBehaviour {
 
             reloadTime -= Time.deltaTime;
 
+            if (agent.remainingDistance < agent.radius) {
+                SetWalkingSpeed(0f);
+            }
+
+            if (rigBuilder.enabled && Vector3.Angle(head.forward, aimPoint.position - head.position) > 45f) {
+                rigBuilder.enabled = false;
+            }
+
             if (FullySeesPlayer() && !PlayerController.isDead) {
                 aimPoint.position = Vector3.Lerp(aimPoint.position, player.position, 5f * Time.deltaTime);
-                rigBuilder.enabled = true;
+                SetRigWeight(true);
                 agent.SetDestination(player.position);
 
                 if (Vector3.Dot(head.forward, ( player.position - head.position ).normalized) > 0.95f) {
@@ -199,7 +207,7 @@ public class EnemyAI : MonoBehaviour {
 
             switch (currentState) {
                 case CurrentState.Patrol:
-                    rigBuilder.enabled = false;
+                    SetRigWeight(false);
 
                     if (idleTime > 0f) {
                         idleTime -= Time.deltaTime;
@@ -218,6 +226,7 @@ public class EnemyAI : MonoBehaviour {
 
                     if (FullySeesPlayer()) {
                         currentState = CurrentState.Suspicious;
+                        suspicionTimer = 15f;
 
                         if (TouchingPlayer()) {
                             suspicionLevel = 3;
@@ -228,14 +237,12 @@ public class EnemyAI : MonoBehaviour {
                     break;
                 case CurrentState.Suspicious:
                     if (suspicionLevel == 3) {
-                        alertTimer = 10f;
+                        alertTimer = 15f;
                         currentState = CurrentState.Alert;
                     } else {
-                        suspicionTimer = 5f;
-
                         if (TouchingPlayer()) {
                             suspicionLevel = 3;
-                            alertTimer = 10f;
+                            alertTimer = 15f;
                             currentState = CurrentState.Alert;
                         } else {
                             if (FullySeesPlayer()) {
@@ -262,7 +269,7 @@ public class EnemyAI : MonoBehaviour {
                     SetWalkingSpeed(1f);
 
                     if (FullySeesPlayer() || TouchingPlayer()) {
-                        alertTimer = 10f;
+                        alertTimer = 15f;
                     } else {
                         if (alertTimer < 0f) {
                             vanishCounter = 5f;
@@ -275,7 +282,7 @@ public class EnemyAI : MonoBehaviour {
                     break;
                 case CurrentState.Vanish:
                     if (TouchingPlayer() || FullySeesPlayer()) {
-                        alertTimer = 10f;
+                        alertTimer = 15f;
                         currentState = CurrentState.Alert;
                     } else {
                         if (vanishCounter < 0f) {
@@ -290,6 +297,10 @@ public class EnemyAI : MonoBehaviour {
                     break;
             }
         }
+    }
+
+    void SetRigWeight(bool state) {
+        rigBuilder.enabled = state;
     }
 
     bool TouchingPlayer() {

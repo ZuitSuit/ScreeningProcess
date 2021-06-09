@@ -11,10 +11,26 @@ public class Bullet : MonoBehaviour {
 
     public GameObject explosionPrefab;
 
+    public Light m_Light;
+    TrailRenderer trail;
+
+    [ColorUsage(false, true)]
+    public Color explosionColor;
+    [ColorUsage(false, true)]
+    public Color empColor;
+
+    int powerIndex = 0;
+
+    public AudioClip explosionClip;
+
     void Start() {
         rb = GetComponent<Rigidbody>();
 
-        Lean.Pool.LeanPool.Despawn(gameObject, lifetime);
+        powerIndex = -1;
+
+        trail = GetComponent<TrailRenderer>();
+
+        Destroy(gameObject, lifetime);
     }
 
     public void Shoot(Vector3 position, Vector3 direction){
@@ -33,11 +49,38 @@ public class Bullet : MonoBehaviour {
         if (cameraScreen == null) {
             GameObject newExplosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 
+            if (powerIndex == 1) {
+                newExplosion.GetComponent<MeshRenderer>().material.SetColor("_ForceFieldColor", explosionColor);
+            } else if (powerIndex >= 2) {
+                newExplosion.GetComponent<MeshRenderer>().material.SetColor("_ForceFieldColor", empColor);
+            }
+
             LeanTween.scale(newExplosion, Vector3.one * 5f, 0.2f).setEaseInOutSine();
+
+            AudioSource.PlayClipAtPoint(explosionClip, transform.position);
 
             Destroy(newExplosion, 0.2f);
 
-            Lean.Pool.LeanPool.Despawn(gameObject);
+            Destroy(gameObject);
         }
+    }
+
+    public void IncrementPower() {
+        powerIndex++;
+        SetColor(powerIndex);
+    }
+
+    public void SetColor(int index) {
+        if (index == 1) {
+            m_Light.color = explosionColor;
+            trail.material.color = explosionColor;
+        } else if (index >= 2) {
+            m_Light.color = empColor;
+            trail.material.color = empColor;
+        }
+    }
+
+    public void ResetPower() {
+        powerIndex = 0;
     }
 }

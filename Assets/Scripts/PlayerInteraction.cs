@@ -11,6 +11,17 @@ public class PlayerInteraction : MonoBehaviour {
     public GameObject interactionUI;
     public TextMeshProUGUI interactionText;
 
+    public GameObject hidingUI;
+
+    public static PlayerInteraction instance;
+
+    void Start() {
+        instance = this;
+    }
+
+    public void ToggleHidingUI(bool state) {
+        hidingUI.SetActive(state);
+    }
 
     private void Update() {
         InteractionRay();
