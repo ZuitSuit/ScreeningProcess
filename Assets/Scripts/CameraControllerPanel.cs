@@ -11,17 +11,25 @@ public class CameraControllerPanel : MonoBehaviour, IInteractable {
 
     Canvas canvas;
 
-    public CameraScreen[] controllableCameras;
     public RawImage cameraImagePreview;
+
+    public CameraSystem[] cameraSystems;
+
+    int currentCameraIndex = 0;
 
     void Start() {
         canvas = GetComponentInChildren<Canvas>();
 
         canvas.worldCamera = Camera.main;
+
+        foreach (CameraSystem cameraSystem in cameraSystems) {
+            cameraSystem.controllableCamera.enabled = false;
+        }
     }
 
     public void SetCameraPreview(int index) {
-        cameraImagePreview.texture = controllableCameras[index].GetRenderTexture();
+        cameraImagePreview.texture = cameraSystems[index].screen.GetRenderTexture();
+        currentCameraIndex = index;
     }
 
     public string GetDescription() {
@@ -34,8 +42,25 @@ public class CameraControllerPanel : MonoBehaviour, IInteractable {
 
         SetCameraPreview(0);
 
+        if (interacting) {
+            for (int i = 0; i < cameraSystems.Length; i++) {
+                cameraSystems[i].controllableCamera.enabled = i == currentCameraIndex;
+            }
+        } else {
+            foreach (CameraSystem cameraSystem in cameraSystems) {
+                cameraSystem.controllableCamera.enabled = false;
+            }
+        }
+
         vCam.Priority = interacting ? 250 : 10;
 
         PlayerController.instance.LockCursor(!interacting);
+    }
+
+
+    [System.Serializable]
+    public class CameraSystem {
+        public CameraScreen screen;
+        public ControllableCamera controllableCamera;
     }
 }

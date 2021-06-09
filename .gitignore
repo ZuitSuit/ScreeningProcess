@@ -37,3 +37,4 @@ sysinfo.txt
 *.unitypackage
 Logs/AssetImportWorker0.log
 Assets/Scripts/Shooting.cs
+Logs/AssetImportWorker1.log

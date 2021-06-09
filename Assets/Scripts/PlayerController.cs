@@ -34,10 +34,14 @@ public class PlayerController : MonoBehaviour {
 
     bool isCrouching;
 
+    PlayerSprintSystem playerSprintSystem;
+
     private void Start() {
         rb = GetComponent<Rigidbody>();
 
         collider = GetComponent<CapsuleCollider>();
+
+        playerSprintSystem = GetComponent<PlayerSprintSystem>();
 
         LockCursor(true);
 
@@ -84,6 +88,7 @@ public class PlayerController : MonoBehaviour {
         cameraXRotation = Mathf.Clamp(cameraXRotation, cameraClamp.x, cameraClamp.y);
 
         cam.transform.eulerAngles = new Vector3(cameraXRotation, cam.transform.eulerAngles.y, 0f);
+        crouchCam.transform.eulerAngles = cam.transform.eulerAngles;
     }
 
     public void MoveTo(Transform pos) {
@@ -105,6 +110,7 @@ public class PlayerController : MonoBehaviour {
         float speed = walkingSpeed;
         if (IsRunning()) {
             speed = runningSpeed;
+            playerSprintSystem.Sprinting();
         } else if (isCrouching) {
             speed = crouchSpeed;
         }
@@ -143,6 +149,8 @@ public class PlayerController : MonoBehaviour {
 
         canMove = false;
 
+        collider.material = null;
+
         rb.useGravity = true;
         rb.constraints = RigidbodyConstraints.None;
 
@@ -150,8 +158,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     bool IsRunning() {
-        return false;
-        return Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Vertical") > 0f;
+        return Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Vertical") > 0f && playerSprintSystem.CanSprint();
     }
 
     bool IsGrounded() {

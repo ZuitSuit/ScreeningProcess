@@ -5,7 +5,7 @@ using TMPro;
 
 public class PlayerInteraction : MonoBehaviour {
 
-    public Camera mainCam;
+    Camera mainCam;
     public float interactionDistance = 2f;
 
     public GameObject interactionUI;
@@ -17,6 +17,8 @@ public class PlayerInteraction : MonoBehaviour {
 
     void Start() {
         instance = this;
+
+        mainCam = Camera.main;
     }
 
     public void ToggleHidingUI(bool state) {
