@@ -22,7 +22,7 @@ public class CameraScreen : MonoBehaviour
         renderTexture.Create();
         
         connectedCam.targetTexture = renderTexture;
-        //rend.material.mainTexture = renderTexture;
+        rend.material.mainTexture = renderTexture;
 
         CalculateCorners();
     }
@@ -35,16 +35,6 @@ public class CameraScreen : MonoBehaviour
                         corners[1] = transform.TransformPoint(vertices[110]);
                         corners[2] = transform.TransformPoint(vertices[120]);
                         corners[3] = transform.TransformPoint(vertices[10]);
-
-/*        corners[0] = rend.bounds.min;
-
-        corners[1] = rend.bounds.min;
-        corners[1].y = rend.bounds.max.y;
-
-        corners[2] = rend.bounds.max;
-
-        corners[3] = rend.bounds.max;
-        corners[3].y = rend.bounds.min.y;*/
     }
 
     public RenderTexture GetRenderTexture() {
@@ -72,6 +62,7 @@ public class CameraScreen : MonoBehaviour
 
         Ray rayOut = connectedCam.ViewportPointToRay(new Vector3(x, y, 0f));
 
+        bullet.IncrementPower();
         bullet.Shoot(rayOut.origin, rayOut.direction);
     }
 

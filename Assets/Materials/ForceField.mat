@@ -41,5 +41,5 @@ Material:
     - Vector1_84B77785: 0.6
     m_Colors:
     - Vector2_9D595861: {r: 0, g: 0, b: 0, a: 0}
-    - _ForceFieldColor: {r: 0, g: 6.062866, b: 6.062866, a: 0}
+    - _ForceFieldColor: {r: 2.164706, g: 0.47058824, b: 3.3568628, a: 1}
   m_BuildTextureStacks: []

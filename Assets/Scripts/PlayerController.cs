@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
+    public float crouchSpeed;
     public float walkingSpeed;
     public float runningSpeed;
     public float gravityScale;
@@ -12,6 +13,7 @@ public class PlayerController : MonoBehaviour {
     Rigidbody rb;
 
     public Cinemachine.CinemachineVirtualCamera cam;
+    public Cinemachine.CinemachineVirtualCamera crouchCam;
 
     float cameraXRotation;
     public Vector2 cameraClamp;
@@ -26,14 +28,16 @@ public class PlayerController : MonoBehaviour {
 
     float footstepTime;
 
-    Collider collider;
+    CapsuleCollider collider;
 
     public static bool isDead;
+
+    bool isCrouching;
 
     private void Start() {
         rb = GetComponent<Rigidbody>();
 
-        collider = GetComponent<Collider>();
+        collider = GetComponent<CapsuleCollider>();
 
         LockCursor(true);
 
@@ -56,6 +60,12 @@ public class PlayerController : MonoBehaviour {
 
     private void Update() {
         cam.m_Lens.FieldOfView = Mathf.Lerp(cam.m_Lens.FieldOfView, IsRunning() ? 75f : 60f, 10f * Time.deltaTime);
+
+        collider.height = Mathf.Lerp(collider.height, isCrouching ? 0.5f : 1.8f, 10f * Time.deltaTime);
+        crouchCam.Priority = isCrouching ? 250 : 0;
+
+        isCrouching = IsCrouching();
+
         if (canMove) {
             cameraController();
         }
@@ -95,6 +105,8 @@ public class PlayerController : MonoBehaviour {
         float speed = walkingSpeed;
         if (IsRunning()) {
             speed = runningSpeed;
+        } else if (isCrouching) {
+            speed = crouchSpeed;
         }
 
         Vector3 direction = cam.transform.forward * input.y + cam.transform.right * input.x;
@@ -144,5 +156,9 @@ public class PlayerController : MonoBehaviour {
 
     bool IsGrounded() {
         return Physics.Raycast(transform.position, -Vector3.up, collider.bounds.extents.y + 0.1f, 1);
+    }
+
+    bool IsCrouching() {
+        return Input.GetKey(KeyCode.LeftControl) || Physics.Raycast(transform.position, Vector3.up, 1f);
     }
 }
