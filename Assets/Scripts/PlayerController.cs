@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour {
 
     PlayerSprintSystem playerSprintSystem;
 
+    public WeaponSway weaponSway;
+
     private void Start() {
         rb = GetComponent<Rigidbody>();
 
@@ -122,6 +124,8 @@ public class PlayerController : MonoBehaviour {
         direction *= transform.localScale.magnitude;
 
         rb.velocity = direction + Vector3.up * gravity;
+
+        weaponSway.Sway(rb.velocity, false);
     }
 
     void ManageFootsteps() {
@@ -137,6 +141,16 @@ public class PlayerController : MonoBehaviour {
             footstepTime = 0f;
             footstepManager.PlayFootstepSound();
             //footstepAudioSource.PlayOneShot(footstepSounds[Random.Range(0, footstepSounds.Length)]);
+        }
+    }
+
+    public void ToggleHiding(bool isHiding) {
+        if (isHiding) {
+            collider.enabled = false;
+            rb.isKinematic = true;
+        } else {
+            collider.enabled = true;
+            rb.isKinematic = false;
         }
     }
 

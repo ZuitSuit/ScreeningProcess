@@ -34,6 +34,7 @@ public class HidingSpot : MonoBehaviour, IInteractable {
         isHiding = !isHiding;
 
         PlayerInteraction.instance.ToggleHidingUI(isHiding);
+        PlayerController.instance.ToggleHiding(isHiding);
 
         if (isHiding) {
             anim.SetTrigger("enter");

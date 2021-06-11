@@ -368,9 +368,13 @@ public class EnemyAI : MonoBehaviour {
 
     public void OnCollisionEnter(Collision collision) {
         if (collision.gameObject.CompareTag("Bullet")) {
-            GetComponent<RagdollToggle>().SetKinematic(false);
-            isDead = true;
+            Die();
         }
+    }
+
+    public void Die() {
+        GetComponent<RagdollToggle>().SetKinematic(false);
+        isDead = true;
     }
 
     bool FullySeesPlayer() {

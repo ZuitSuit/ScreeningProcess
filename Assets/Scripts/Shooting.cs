@@ -9,27 +9,57 @@ public class Shooting : MonoBehaviour {
 
     public AudioSource shootSound;
 
+    public Transform shootPoint;
+    public Transform gunT;
+
+    bool canShoot;
+
     void Start() {
         mainCam = Camera.main;
+
+        canShoot = true;
     }
 
     // Update is called once per frame
-    void Update(){
-        if (Input.GetMouseButtonDown(0)) {
+    void LateUpdate(){
+        if (Input.GetMouseButton(0)) {
             Shoot();
         }
     }
 
+    void OnDrawGizmos() {
+        Gizmos.color = Color.red;
+
+        Vector3 targetShootPoint = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1f));
+        Gizmos.DrawRay(shootPoint.position, (Camera.main.transform.position + Camera.main.transform.forward*100f - shootPoint.position ).normalized);
+
+    }
+
     void Shoot() {
-        Ray ray = mainCam.ViewportPointToRay(Vector3.one/2f);
+        if (!canShoot) return;
+        canShoot = false;
+
+        Transform camT = Camera.main.transform;
+        Vector3 targetShootPoint = camT.position + camT.forward * 100f;
+
+        Ray ray = Camera.main.ViewportPointToRay(Vector3.one/2f);
+
+        if (Physics.Raycast(ray, out RaycastHit hit)) {
+            targetShootPoint = hit.point;
+        }
 
         shootSound.Play();
 
-        GameObject newBullet = Instantiate(bulletPrefab, ray.origin, Quaternion.identity);
+        GameObject newBullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
 
         Bullet bullet = newBullet.GetComponent<Bullet>();
 
-        bullet.Shoot(ray.origin, ray.direction);
+        bullet.Shoot(shootPoint.position, (targetShootPoint - shootPoint.position).normalized);
+
+        LeanTween.rotateAroundLocal(gunT.gameObject, Vector3.right, 360f, 1f).setEaseInOutQuint();
+        LeanTween.delayedCall(1f, () => {
+            canShoot = true;
+        });
     }
 
 

@@ -51,6 +51,7 @@ public class Bullet : MonoBehaviour {
 
             if (powerIndex == 1) {
                 newExplosion.GetComponent<MeshRenderer>().material.SetColor("_ForceFieldColor", explosionColor);
+                Explode();
             } else if (powerIndex >= 2) {
                 newExplosion.GetComponent<MeshRenderer>().material.SetColor("_ForceFieldColor", empColor);
             }
@@ -62,6 +63,23 @@ public class Bullet : MonoBehaviour {
             Destroy(newExplosion, 0.2f);
 
             Destroy(gameObject);
+        }
+    }
+
+    public void Explode() {
+        Collider[] around = Physics.OverlapSphere(transform.position, 5f);
+
+        foreach (Collider col in around) {
+            DestructableWall destructableWall = col.GetComponent<DestructableWall>();
+            EnemyAI enemyAI = col.GetComponent<EnemyAI>();
+
+            if (destructableWall != null) {
+                destructableWall.Shatter(transform.position);
+            }
+
+            if (enemyAI != null) {
+                enemyAI.Die();
+            }
         }
     }
 
