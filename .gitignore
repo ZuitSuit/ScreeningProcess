@@ -38,3 +38,6 @@ sysinfo.txt
 Logs/AssetImportWorker0.log
 Assets/Scripts/Shooting.cs
 Logs/AssetImportWorker1.log
+Assets/Scenes/BuildingTest.unity
+Logs/AssetImportWorker0-prev.log
+UserSettings/EditorUserSettings.asset
