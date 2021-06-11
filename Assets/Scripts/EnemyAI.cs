@@ -48,10 +48,12 @@ public class EnemyAI : MonoBehaviour {
 
     public enum PatrolLoopType {
         WalkBack,
-        GoToFirst
+        GoToFirst,
+        SwitchToSecondary
     }
 
     public Transform patrolPathParent;
+    public Transform secondaryPatrolPathParent;
 
     bool isDead = false;
 
@@ -144,6 +146,10 @@ public class EnemyAI : MonoBehaviour {
             } else if (patrolLoopType == PatrolLoopType.WalkBack) {
                 patrolPathIndex = patrolPathParent.childCount - 1;
                 incrementPathIndex = false;
+            }   else if (patrolLoopType == PatrolLoopType.SwitchToSecondary && secondaryPatrolPathParent != null){
+                patrolLoopType = PatrolLoopType.WalkBack;
+                patrolPathParent = secondaryPatrolPathParent;
+                patrolPathIndex = 0;
             }
         }
     }
