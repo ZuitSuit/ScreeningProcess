@@ -6,6 +6,8 @@ public class WeaponSway : MonoBehaviour {
 
     public Vector2 mouseSwayMultiplier = Vector2.one;
 
+    public MeshRenderer meshRend;
+
     public void Sway(Vector3 velocity, bool aiming) {
         transform.Rotate(Input.GetAxis("Mouse Y") * transform.right * 0.3f * mouseSwayMultiplier.x);
         transform.Rotate(-Input.GetAxis("Mouse X") * (Vector3.up + Vector3.forward) * 0.2f * mouseSwayMultiplier.y);
@@ -47,6 +49,10 @@ public class WeaponSway : MonoBehaviour {
     float SineRange(float time, float min, float max) {
         float normalized = ( Mathf.Sin(time) + 1f ) / 2f;
         return normalized * ( max - min ) + min;
+    }
+
+    public void EnableWeapon(bool enabled) {
+        meshRend.enabled = enabled;
     }
 
 }

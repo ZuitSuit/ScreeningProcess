@@ -8,7 +8,7 @@ using GD.MinMaxSlider;
 using UnityEngine.Animations.Rigging;
 using Lean.Pool;
 
-public class EnemyAI : MonoBehaviour {
+public class EnemyAI : MonoBehaviour, IExplodeable {
 
     Animator anim;
     NavMeshAgent agent;
@@ -379,5 +379,9 @@ public class EnemyAI : MonoBehaviour {
 
     bool FullySeesPlayer() {
         return SeesObject(player) && InRange(player.position, transform.position, sightRange) && InFov(player.position, fovRange);
+    }
+
+    public void Explode(Vector3 pos) {
+        Die();
     }
 }

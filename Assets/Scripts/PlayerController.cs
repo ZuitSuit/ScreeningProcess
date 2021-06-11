@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour {
     public static PlayerController instance;
 
     bool canMove;
+    bool isHiding;
 
     float footstepTime;
 
@@ -97,6 +98,10 @@ public class PlayerController : MonoBehaviour {
         transform.position = pos.position;
     }
 
+    public bool CanShoot() {
+        return canMove && !isHiding;
+    }
+
     private void movementController() {
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
@@ -152,6 +157,10 @@ public class PlayerController : MonoBehaviour {
             collider.enabled = true;
             rb.isKinematic = false;
         }
+
+        this.isHiding = isHiding;
+
+        weaponSway.EnableWeapon(!isHiding);
     }
 
     public void Die() {

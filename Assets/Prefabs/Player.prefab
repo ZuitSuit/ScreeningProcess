@@ -2802,6 +2802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mouseSwayMultiplier: {x: 2, y: 2}
+  meshRend: {fileID: 1664795393483455996}
 --- !u!1 &6362464087107006049
 GameObject:
   m_ObjectHideFlags: 0

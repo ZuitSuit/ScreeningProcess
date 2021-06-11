@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DestructableWall : MonoBehaviour {
+public class DestructableWall : MonoBehaviour, IExplodeable {
 
     public Transform[] cells;
     public GameObject wall;
@@ -33,4 +33,7 @@ public class DestructableWall : MonoBehaviour {
         Destroy(gameObject, 10f);
     }
     
+    public void Explode(Vector3 pos) {
+        Shatter(pos);
+    }
 }

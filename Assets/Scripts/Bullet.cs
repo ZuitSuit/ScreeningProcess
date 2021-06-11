@@ -21,14 +21,15 @@ public class Bullet : MonoBehaviour {
 
     int powerIndex = 0;
 
+    public float range = 5f;
+
     public AudioClip explosionClip;
 
     void Start() {
         rb = GetComponent<Rigidbody>();
+        trail = GetComponent<TrailRenderer>();
 
         powerIndex = -1;
-
-        trail = GetComponent<TrailRenderer>();
 
         Destroy(gameObject, lifetime);
     }
@@ -54,9 +55,10 @@ public class Bullet : MonoBehaviour {
                 Explode();
             } else if (powerIndex >= 2) {
                 newExplosion.GetComponent<MeshRenderer>().material.SetColor("_ForceFieldColor", empColor);
+                EMPExplosion();
             }
 
-            LeanTween.scale(newExplosion, Vector3.one * 5f, 0.2f).setEaseInOutSine();
+            LeanTween.scale(newExplosion, Vector3.one * range, 0.2f).setEaseInOutSine();
 
             AudioSource.PlayClipAtPoint(explosionClip, transform.position);
 
@@ -66,19 +68,26 @@ public class Bullet : MonoBehaviour {
         }
     }
 
-    public void Explode() {
-        Collider[] around = Physics.OverlapSphere(transform.position, 5f);
+    public void EMPExplosion() {
+        Collider[] around = Physics.OverlapSphere(transform.position, range);
 
         foreach (Collider col in around) {
-            DestructableWall destructableWall = col.GetComponent<DestructableWall>();
-            EnemyAI enemyAI = col.GetComponent<EnemyAI>();
+            IElectric explodeable = col.GetComponent<IElectric>();
 
-            if (destructableWall != null) {
-                destructableWall.Shatter(transform.position);
+            if (explodeable != null) {
+                explodeable.TurnOffElectricity();
             }
+        }
+    }
 
-            if (enemyAI != null) {
-                enemyAI.Die();
+    public void Explode() {
+        Collider[] around = Physics.OverlapSphere(transform.position, range);
+
+        foreach (Collider col in around) {
+            IExplodeable explodeable = col.GetComponent<IExplodeable>();
+
+            if (explodeable != null) {
+                explodeable.Explode(transform.position);
             }
         }
     }

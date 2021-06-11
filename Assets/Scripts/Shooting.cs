@@ -22,17 +22,9 @@ public class Shooting : MonoBehaviour {
 
     // Update is called once per frame
     void LateUpdate(){
-        if (Input.GetMouseButton(0)) {
+        if (Input.GetMouseButton(0) && PlayerController.instance.CanShoot()) {
             Shoot();
         }
-    }
-
-    void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-
-        Vector3 targetShootPoint = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1f));
-        Gizmos.DrawRay(shootPoint.position, (Camera.main.transform.position + Camera.main.transform.forward*100f - shootPoint.position ).normalized);
-
     }
 
     void Shoot() {
