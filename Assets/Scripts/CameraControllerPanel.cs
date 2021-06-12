@@ -25,6 +25,8 @@ public class CameraControllerPanel : MonoBehaviour, IInteractable {
         foreach (CameraSystem cameraSystem in cameraSystems) {
             cameraSystem.controllableCamera.enabled = false;
         }
+
+        SetCameraPreview(0);
     }
 
     public void SetCameraPreview(int index) {
