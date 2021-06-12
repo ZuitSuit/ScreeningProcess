@@ -187,8 +187,8 @@ public class EnemyAI : MonoBehaviour, IExplodeable {
             agent.nextPosition = transform.position;
 
             reloadTime -= Time.deltaTime;
-
             if (agent.remainingDistance < agent.radius) {
+                
                 SetWalkingSpeed(0f);
             }
 
