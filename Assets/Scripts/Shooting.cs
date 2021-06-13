@@ -14,6 +14,8 @@ public class Shooting : MonoBehaviour {
 
     bool canShoot;
 
+    public float reloadTime = 2f;
+
     void Start() {
         mainCam = Camera.main;
 
@@ -48,8 +50,8 @@ public class Shooting : MonoBehaviour {
 
         bullet.Shoot(shootPoint.position, (targetShootPoint - shootPoint.position).normalized);
 
-        LeanTween.rotateAroundLocal(gunT.gameObject, Vector3.right, 360f, 1f).setEaseInOutQuint();
-        LeanTween.delayedCall(1f, () => {
+        LeanTween.rotateAroundLocal(gunT.gameObject, Vector3.right, 360f, reloadTime).setEaseInOutQuint();
+        LeanTween.delayedCall(reloadTime, () => {
             canShoot = true;
         });
     }

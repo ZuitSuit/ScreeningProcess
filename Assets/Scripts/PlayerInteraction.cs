@@ -13,7 +13,14 @@ public class PlayerInteraction : MonoBehaviour {
 
     public GameObject hidingUI;
 
+    [Header("Notes")]
+    public GameObject noteUI;
+    public TextMeshProUGUI noteText;
+    public AudioSource noteSound;
+
     public static PlayerInteraction instance;
+
+    public float noteTime;
 
     void Start() {
         instance = this;
@@ -25,8 +32,20 @@ public class PlayerInteraction : MonoBehaviour {
         hidingUI.SetActive(state);
     }
 
+    public void ReadNote(string note) {
+        noteUI.SetActive(true);
+        noteText.text = note;
+        noteSound.Play();
+
+        noteTime = Time.time;
+    }
+
     private void Update() {
         InteractionRay();
+
+        if (Input.anyKeyDown && Time.time - noteTime > 0.5f) {
+            noteUI.SetActive(false);
+        }
     }
 
     void InteractionRay() {

@@ -25,6 +25,8 @@ public class CameraScreen : MonoBehaviour
         rend.material.mainTexture = renderTexture;
 
         CalculateCorners();
+
+        connectedCam.enabled = false;
     }
 
     void CalculateCorners() {
@@ -49,6 +51,14 @@ public class CameraScreen : MonoBehaviour
             Gizmos.DrawCube(corner, Vector3.one * 0.1f);
             index += 1f;
         }
+    }
+
+    void OnBecameInvisible() {
+        connectedCam.enabled = false;
+    }
+
+    void OnBecameVisible() {
+        connectedCam.enabled = true;
     }
 
     private void OnCollisionEnter(Collision collision){

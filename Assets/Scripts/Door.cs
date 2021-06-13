@@ -40,7 +40,7 @@ public class Door : MonoBehaviour, IInteractable {
 
         if (isOpen) {
             Vector3 dir = (pos - transform.position);
-            targetYRotation = Mathf.Sign(Vector3.Dot(transform.forward, dir)) * 90f;
+            targetYRotation = Mathf.Sign(Vector3.Dot(transform.forward, dir)) * -90f;
             timer = 5f;
         } else {
             targetYRotation = 0f;
