@@ -1,4 +1,3 @@
-using GD.MinMaxSlider;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,9 +5,7 @@ using UnityEngine;
 public class ControllableCamera : MonoBehaviour
 {
 
-    [MinMaxSlider(-180f, 180f)]
     public Vector2 topDownClamp = new Vector2(0f, 30f);
-    [MinMaxSlider(-180f, 180f)]
     public Vector2 leftRightClamp = new Vector2(-30f, 30f);
 
     public Camera cam;

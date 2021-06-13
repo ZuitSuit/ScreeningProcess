@@ -11,7 +11,7 @@ public class ChromaKeyDoor : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (PlayerController.instance.keycardPieces >= 3)
+        if (PlayerController.instance.keycardPieces >= 4)
         {
             gameObject.SetActive(false);
         }

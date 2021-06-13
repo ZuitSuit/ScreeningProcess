@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using CleverCrow.Fluid.BTs.Tasks;
 using CleverCrow.Fluid.BTs.Trees;
-using GD.MinMaxSlider;
 using UnityEngine.Animations.Rigging;
 using Lean.Pool;
 
@@ -34,7 +33,6 @@ public class EnemyAI : MonoBehaviour, IExplodeable {
     [Header("AI Patrol Settings")]
     public PatrolLoopType patrolLoopType;
 
-    [MinMaxSlider(0, 60)]
     public Vector2 minMaxIdleTime;
 
     float idleTime;
@@ -321,7 +319,10 @@ public class EnemyAI : MonoBehaviour, IExplodeable {
         Vector3 targetVelocity = anim.deltaPosition / Time.deltaTime;
 
         if (agent.remainingDistance > agent.radius) {
-            agent.speed = targetVelocity.magnitude;
+            float targetSpeed = targetVelocity.magnitude;
+            if (!float.IsNaN(targetSpeed)) {
+                agent.speed = targetSpeed;
+            }
         } else {
             agent.speed = 0f;
         }
@@ -373,8 +374,12 @@ public class EnemyAI : MonoBehaviour, IExplodeable {
     }
 
     public void Die() {
+        if (isDead) return;
+
         GetComponent<RagdollToggle>().SetKinematic(false);
         isDead = true;
+
+        Destroy(gameObject, 5f);
     }
 
     bool FullySeesPlayer() {

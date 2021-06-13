@@ -47,6 +47,12 @@ public class Bullet : MonoBehaviour {
     void OnCollisionEnter(Collision collision) {
         CameraScreen cameraScreen = collision.gameObject.GetComponent<CameraScreen>();
 
+        ShootableButton button = collision.gameObject.GetComponent<ShootableButton>();
+
+        if (button != null) {
+            button.ToggleGlass();
+        }
+
         if (cameraScreen == null) {
             GameObject newExplosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 
@@ -58,7 +64,11 @@ public class Bullet : MonoBehaviour {
                 EMPExplosion();
             }
 
-            LeanTween.scale(newExplosion, Vector3.one * range, 0.2f).setEaseInOutSine();
+            if (powerIndex == -1) {
+                LeanTween.scale(newExplosion, Vector3.one * range * 0.1f, 0.2f).setEaseInOutSine();    
+            } else {
+                LeanTween.scale(newExplosion, Vector3.one * range, 0.2f).setEaseInOutSine();
+            }
 
             AudioSource.PlayClipAtPoint(explosionClip, transform.position);
 

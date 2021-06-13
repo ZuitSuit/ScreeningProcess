@@ -15,18 +15,22 @@ public class CameraScreen : MonoBehaviour
 
     RenderTexture renderTexture;
 
-    private void Start() {
-        renderTexture = new RenderTexture((int)(textureWidth),
-                                        (int) (textureWidth * textureRatio),
+    public Camera[] connectedCams;
+
+    private void Awake() {
+        renderTexture = new RenderTexture((int) ( textureWidth ),
+                                        (int) ( textureWidth * textureRatio ),
                                         24);
         renderTexture.Create();
-        
+
         connectedCam.targetTexture = renderTexture;
         rend.material.mainTexture = renderTexture;
+    }
 
+    private void Start() {
         CalculateCorners();
 
-        connectedCam.enabled = false;
+        ToggleCamera(false);
     }
 
     void CalculateCorners() {
@@ -37,6 +41,26 @@ public class CameraScreen : MonoBehaviour
                         corners[1] = transform.TransformPoint(vertices[110]);
                         corners[2] = transform.TransformPoint(vertices[120]);
                         corners[3] = transform.TransformPoint(vertices[10]);
+    }
+
+    void OnTriggerEnter(Collider collider) {
+        if (collider.CompareTag("Player")) {
+            ToggleCamera(true);
+        }
+    }
+
+    void OnTriggerExit(Collider collider) {
+        if (collider.CompareTag("Player")) {
+            ToggleCamera(false);
+        }
+    }
+
+    public void ToggleCamera(bool state) {
+        connectedCam.enabled = state;
+
+        foreach (Camera cam in connectedCams) {
+            cam.enabled = state;
+        }
     }
 
     public RenderTexture GetRenderTexture() {
@@ -51,14 +75,6 @@ public class CameraScreen : MonoBehaviour
             Gizmos.DrawCube(corner, Vector3.one * 0.1f);
             index += 1f;
         }
-    }
-
-    void OnBecameInvisible() {
-        connectedCam.enabled = false;
-    }
-
-    void OnBecameVisible() {
-        connectedCam.enabled = true;
     }
 
     private void OnCollisionEnter(Collision collision){

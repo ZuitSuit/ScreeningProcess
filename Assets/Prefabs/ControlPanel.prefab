@@ -327,7 +327,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2807479483536754939}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -409,6 +409,7 @@ GameObject:
   - component: {fileID: 2807479483811684320}
   - component: {fileID: 2807479483811684327}
   - component: {fileID: 2807479483811684323}
+  - component: {fileID: 7512027368304822309}
   m_Layer: 0
   m_Name: Screen
   m_TagString: Screen
@@ -508,6 +509,7 @@ MonoBehaviour:
   rend: {fileID: 2807479483811684321}
   textureWidth: 500
   textureRatio: 0.6060606
+  connectedCams: []
 --- !u!114 &2807479483811684323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -525,6 +527,19 @@ MonoBehaviour:
   cam: {fileID: 2807479483536754934}
   movementSpeed: 20
   rotationJoint: {fileID: 4259222556053096863}
+--- !u!135 &7512027368304822309
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2807479483811684325}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 10
+  m_Center: {x: 0.0000038146973, y: 0.0000009536743, z: -0.0000009536743}
 --- !u!1 &2807479483867604718
 GameObject:
   m_ObjectHideFlags: 0

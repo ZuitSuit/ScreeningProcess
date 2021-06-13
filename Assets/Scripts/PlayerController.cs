@@ -44,6 +44,11 @@ public class PlayerController : MonoBehaviour {
     //keycard stuff
     public int keycardPieces = 0;
 
+    bool isPaused = false;
+
+    public GameObject pauseMenu;
+    public TMPro.TextMeshProUGUI keyText;
+
 
     private void Start() {
         rb = GetComponent<Rigidbody>();
@@ -83,10 +88,8 @@ public class PlayerController : MonoBehaviour {
             cameraController();
         }
 
-        if(Input.GetKeyDown(KeyCode.Period))
-        {
-            StartCoroutine(Restart());
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P)) {
+            TogglePause();
         }
     }
 
@@ -191,15 +194,9 @@ public class PlayerController : MonoBehaviour {
 
         rb.AddForce(Random.onUnitSphere * 1000f);
 
-        StartCoroutine(Restart());
-
-    }
-
-    public IEnumerator Restart()
-    {
-        yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        yield return null;
+        LeanTween.delayedCall(2f, () => {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        });
     }
 
     bool IsRunning() {
@@ -211,20 +208,37 @@ public class PlayerController : MonoBehaviour {
     }
 
     bool IsCrouching() {
-        return Input.GetKey(KeyCode.LeftControl) || Physics.Raycast(transform.position, Vector3.up, 1f);
+        bool aboveHead = true;
+
+        if (Physics.Raycast(transform.position, Vector3.up, out RaycastHit hit, 1f)) {
+            if (hit.collider.isTrigger) {
+                aboveHead = false;
+            }
+        } else {
+            aboveHead = false;
+        }
+
+        return Input.GetKey(KeyCode.LeftControl) || aboveHead;
     }
 
 
 
-    public void CollectKeyCard()
-    {
+    public void CollectKeyCard(){
         keycardPieces += 1;
-        if(keycardPieces >= 3)
-        {
-            //swap icon to the rainbow key
-            return;
-        }
 
-        //update counter 
+        keyText.text = $"{keycardPieces} / 4"; 
+    }
+
+    public void TogglePause() {
+        isPaused = !isPaused;
+
+        Time.timeScale = isPaused ? 0f : 1f;
+        pauseMenu.SetActive(isPaused);
+
+        LockCursor(!isPaused);
+    }
+
+    public void QuitGame() {
+        Application.Quit();
     }
 }

@@ -16,6 +16,8 @@ public class Shooting : MonoBehaviour {
 
     public float reloadTime = 2f;
 
+    public LayerMask shootLayer;
+
     void Start() {
         mainCam = Camera.main;
 
@@ -29,16 +31,30 @@ public class Shooting : MonoBehaviour {
         }
     }
 
+    void OnDrawGizmos() {
+        Transform camT = Camera.main.transform;
+        Vector3 targetShootPoint = camT.position + camT.forward * 10f;
+
+        Ray ray = Camera.main.ViewportPointToRay(Vector3.one/2f);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, shootLayer)) {
+            targetShootPoint = hit.point;
+        }
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(targetShootPoint, Vector3.one * 0.1f);
+    }
+
     void Shoot() {
         if (!canShoot) return;
         canShoot = false;
 
         Transform camT = Camera.main.transform;
-        Vector3 targetShootPoint = camT.position + camT.forward * 100f;
+        Vector3 targetShootPoint = camT.position + camT.forward * 10f;
 
         Ray ray = Camera.main.ViewportPointToRay(Vector3.one/2f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit)) {
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, shootLayer)) {
             targetShootPoint = hit.point;
         }
 
