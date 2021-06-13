@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
@@ -80,6 +81,12 @@ public class PlayerController : MonoBehaviour {
 
         if (canMove) {
             cameraController();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Period))
+        {
+            StartCoroutine(Restart());
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
@@ -183,6 +190,16 @@ public class PlayerController : MonoBehaviour {
         rb.constraints = RigidbodyConstraints.None;
 
         rb.AddForce(Random.onUnitSphere * 1000f);
+
+        StartCoroutine(Restart());
+
+    }
+
+    public IEnumerator Restart()
+    {
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        yield return null;
     }
 
     bool IsRunning() {
