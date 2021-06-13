@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class WaveSpawner : MonoBehaviour, IInteractable
 {
@@ -10,6 +11,10 @@ public class WaveSpawner : MonoBehaviour, IInteractable
     List<Transform> waves = new List<Transform>();
     int currentWave = -1;
     public HatchOpener hatch;
+    float totalTime;
+
+    public TextMeshProUGUI timerText;
+
     private void Start()
     {
 
@@ -17,6 +22,9 @@ public class WaveSpawner : MonoBehaviour, IInteractable
         {
             waves.Add(child);
         }
+
+        totalTime = (waves.Count+1) * 10f;
+        StartSpawn();
     }
 
     public void Interact()
@@ -37,14 +45,23 @@ public class WaveSpawner : MonoBehaviour, IInteractable
 
     private void Update()
     {
+        if (!spawnsActive) return;
+
+        totalTime -= Time.deltaTime;
+        
+        timerText.text = string.Format("{0:D2}:{1:D2}", (int)totalTime/60, (int)totalTime %60);
+
         timer += Time.deltaTime;
-        if (spawnsActive && timer > 10f)
+        if (timer > 10f)
         {
             currentWave++;
             if(currentWave >= waves.Count)
             {
                 hatch.Open();
+                timerText.color = Color.green;
+                timerText.text = "open";
                 enabled = false;
+
                 return;
             }
 
