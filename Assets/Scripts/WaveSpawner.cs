@@ -15,6 +15,8 @@ public class WaveSpawner : MonoBehaviour, IInteractable
 
     public TextMeshProUGUI timerText;
 
+    public AudioSource drumsAudio;
+
     private void Start()
     {
 
@@ -24,7 +26,6 @@ public class WaveSpawner : MonoBehaviour, IInteractable
         }
 
         totalTime = (waves.Count+1) * 10f;
-        StartSpawn();
     }
 
     public void Interact()
@@ -34,13 +35,14 @@ public class WaveSpawner : MonoBehaviour, IInteractable
 
     public string GetDescription()
     {
-        return spawnsActive ? "hatch opening...": "override hatch controls";
+        return spawnsActive ? "Hatch Opening...": "Override Hatch Controls";
     }
 
     void StartSpawn()
     {
         spawnsActive = true;
         timer = 0f;
+        drumsAudio.Play();
     }
 
     private void Update()
@@ -59,7 +61,7 @@ public class WaveSpawner : MonoBehaviour, IInteractable
             {
                 hatch.Open();
                 timerText.color = Color.green;
-                timerText.text = "open";
+                timerText.text = "Open";
                 enabled = false;
 
                 return;

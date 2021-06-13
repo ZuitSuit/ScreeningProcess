@@ -226,7 +226,7 @@ public class PlayerController : MonoBehaviour {
     public void CollectKeyCard(){
         keycardPieces += 1;
 
-        keyText.text = $"{keycardPieces} / 4"; 
+        keyText.text = $"Keys: {keycardPieces} / 4";
     }
 
     public void TogglePause() {
