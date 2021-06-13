@@ -39,6 +39,11 @@ public class PlayerController : MonoBehaviour {
 
     public WeaponSway weaponSway;
 
+
+    //keycard stuff
+    public int keycardPieces = 0;
+
+
     private void Start() {
         rb = GetComponent<Rigidbody>();
 
@@ -190,5 +195,19 @@ public class PlayerController : MonoBehaviour {
 
     bool IsCrouching() {
         return Input.GetKey(KeyCode.LeftControl) || Physics.Raycast(transform.position, Vector3.up, 1f);
+    }
+
+
+
+    public void CollectKeyCard()
+    {
+        keycardPieces += 1;
+        if(keycardPieces >= 3)
+        {
+            //swap icon to the rainbow key
+            return;
+        }
+
+        //update counter 
     }
 }
